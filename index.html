@@ -1,118 +1,328 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Safe School</title>
-
-<link rel="stylesheet" href="style.css">
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự Án Sáng Tạo Trẻ - Lớp 9D - Trường THCS Gia Tân</title>
+    <style>
+        :root {
+            --primary: #ffa000;
+            --primary-light: #ffecb3;
+            --bg: #fffef0;
+            --white: #ffffff;
+            --text: #5d4037;
+            --gray: #9e9e9e;
+            --danger: #e74c3c;
+        }
+        @keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            margin: 0; background-color: var(--bg); color: var(--text);
+            animation: fadeInPage 1s ease-in-out;
+        }
+        header {
+            background: var(--white); padding: 15px 0; text-align: center;
+            border-bottom: 3px solid var(--primary-light); position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .logo { 
+            font-size: 26px; font-weight: bold; color: var(--primary); 
+            margin: 0; display: inline-block; animation: pulse 3s infinite;
+        }
+        nav { margin-top: 10px; }
+        nav button {
+            background: none; border: 2px solid var(--primary);
+            color: var(--primary); padding: 8px 20px; margin: 0 5px;
+            border-radius: 25px; cursor: pointer; font-weight: bold; 
+            transition: all 0.3s ease;
+        }
+        nav button.active { background: var(--primary); color: white; }
+        nav button.admin-btn { border-color: #5d4037; color: #5d4037; }
+        .container { max-width: 1000px; margin: auto; padding: 20px; }
+        .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+        .qr-banner {
+            background: linear-gradient(135deg, #fffde7 0%, #fff9c4 100%);
+            padding: 20px; border-radius: 20px; margin-bottom: 25px;
+            display: flex; align-items: center; border: 2px dashed var(--primary);
+            animation: slideUp 0.8s ease-out;
+        }
+        .qr-info { flex: 1; padding-right: 15px; }
+        .qr-code-demo {
+            width: 80px; height: 80px; background: white; border: 3px solid var(--primary);
+            display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;
+        }
+        .banner {
+            background: linear-gradient(135deg, #ffecb3 0%, #fff9c4 100%);
+            padding: 30px; text-align: center; border-radius: 20px; margin-bottom: 25px;
+            border: 1px solid #ffe082; animation: slideUp 0.8s ease-out;
+        }
+        .mood-selector { display: flex; justify-content: space-around; margin: 15px 0; }
+        .mood-item {
+            font-size: 30px; cursor: pointer; filter: grayscale(100%);
+            transition: 0.3s; padding: 8px; border-radius: 12px;
+        }
+        .mood-item.selected { filter: grayscale(0%); background: var(--primary-light); transform: scale(1.15); }
+        .post-card, .admin-panel {
+            background: var(--white); padding: 20px; border-radius: 15px;
+            margin-bottom: 20px; border: 1px solid #f0e68c;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); animation: slideUp 0.5s ease-out;
+        }
+        .admin-panel { border: 2px solid #5d4037; background: #fdfae6; }
+        .urgent-tag { background: var(--danger); color: white; padding: 3px 8px; border-radius: 5px; font-size: 0.75em; font-weight: bold; }
+        .post-header { display: flex; justify-content: space-between; font-size: 0.85em; color: var(--gray); }
+        .post-content { font-size: 1.15em; margin: 15px 0; line-height: 1.6; color: #3e2723; }
+        .sidebar-box {
+            background: var(--white); padding: 20px; border-radius: 15px;
+            margin-bottom: 25px; border-top: 5px solid var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+        .stat-row { display: flex; justify-content: space-between; margin: 10px 0; font-weight: bold; }
+        .lucky-jar { text-align: center; cursor: pointer; background: #fffde7; border: 2px dashed var(--primary); transition: 0.3s; }
+        .lucky-jar:hover { transform: rotate(-3deg) scale(1.03); }
+        .btn-submit {
+            background: var(--primary); color: white; border: none; padding: 12px 30px;
+            border-radius: 30px; width: 100%; font-weight: bold; font-size: 18px; cursor: pointer;
+            margin-top: 15px; transition: 0.3s;
+        }
+        .btn-submit:hover { background: #f57c00; box-shadow: 0 5px 15px rgba(245,124,0,0.3); }
+        .hidden { display: none; }
+        @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } .qr-banner { flex-direction: column; text-align: center; } }
+    </style>
 </head>
-
 <body>
-
 <header>
-
-<h2>Safe School</h2>
-
-<nav>
-
-<button onclick="showHome()">Trang chủ</button>
-<button onclick="showReport()">Báo cáo</button>
-<button onclick="showDashboard()">Dashboard</button>
-
-</nav>
-
+    <div class="logo">🌻 GiaTanConfession - Nơi tâm hồn cởi mở</div>
+    <nav>
+        <button id="btn-home" class="active" onclick="showSection('home')">Trang Chủ</button>
+        <button id="btn-post" onclick="showSection('post')">Góc chia sẻ</button>
+        <button id="btn-admin" class="admin-btn" onclick="showSection('admin')">Admin</button>
+    </nav>
 </header>
 
-<section id="home">
+<div class="container">
+    <div class="qr-banner">
+        <div class="qr-info">
+            <h3 style="margin:0; color: var(--primary);">📍 "Ở đây có một đôi tai luôn lắng nghe bạn..."</h3>
+            <p style="margin: 5px 0; font-size: 0.9em;">"Không ai biết bạn là ai, nhưng mọi người đều biết bạn cần được vỗ về."</p>
+        </div>
+    </div>
 
-<h1>Hệ thống báo cáo bạo lực học đường</h1>
+    <div class="main-grid">
+        <main class="content-area">
+            <section id="home-section">
+                <div id="postList"></div>
+            </section>
 
-<p>Giúp học sinh báo cáo sự cố trong trường nhanh chóng</p>
+            <section id="post-section" class="hidden">
+                <div class="post-card" style="border-top: 5px solid var(--primary);">
+                    <h3 style="margin-top:0;">📝 Bạn đang cảm thấy thế nào??</h3>
+                    <div class="mood-selector">
+                        <span class="mood-item" onclick="selectMood('vui', this)">😊</span>
+                        <span class="mood-item" onclick="selectMood('on', this)">😐</span>
+                        <span class="mood-item" onclick="selectMood('buon', this)">😢</span>
+                        <span class="mood-item" onclick="selectMood('stress', this)">🤯</span>
+                        <span class="mood-item" onclick="selectMood('gian', this)">😡</span>
+                    </div>
+                    <textarea id="postInput" placeholder="Đừng ngần ngại, hãy chia sẻ những gì bạn đang cảm thấy..."></textarea>
+	<input type="file" id="imgUpload" accept="image/*" style="margin: 15px 0; display: block;">
+                    <button class="btn-submit" onclick="addPost()">Gửi đi an toàn</button>
+                </div>
+            </section>
 
-<button onclick="showReport()">Gửi báo cáo</button>
+            <section id="admin-section" class="hidden">
+                <div class="admin-panel">
+                    <h3 style="margin-top:0;">👨🏫 Bảng Điều Khiển Trung Tâm</h3>
+                    <p style="font-size: 0.9em;">Các trường hợp cần chú ý (Stress/Giận dữ) sẽ được ưu tiên hiển thị để admin kịp hỗ trợ.</p>
+                    <div id="adminAlertList"></div>
+                </div>
+            </section>
+        </main>
 
-</section>
+        <aside class="sidebar">
+            <div class="sidebar-box">
+                <h4 style="margin-top:0;">📊 Bản đồ cảm xúc Trường THCS Gia Tân</h4>
+                <div class="stat-row" style="color: #2e7d32;"><span>☀️ Tích cực:</span> <span id="happyCount">168</span></div>
+                <div class="stat-row" style="color: var(--danger);"><span>☁️ Cần lắng nghe:</span> <span id="sadCount">35</span></div>
+                <p style="font-size: 0.75em; color: var(--gray); margin-top: 15px;">Dữ liệu giúp nhà trường điều chỉnh các hoạt động hỗ trợ học sinh.</p>
+            </div>
 
-<section id="report" class="hide">
+            <div class="sidebar-box lucky-jar" onclick="getLuckyStar()">
+                <h4 style="margin-top:0;">🌟 Hũ sao may mắn</h4>
+                <p id="star-message" style="font-size: 0.95em;">Bấm vào hũ để nhận một ngôi sao thông điệp!</p>
+            </div>
 
-<h2>Gửi báo cáo</h2>
-
-<input id="name" placeholder="Tên học sinh">
-
-<input id="class" placeholder="Lớp">
-
-<select id="type">
-
-<option>Bạo lực học đường</option>
-<option>Bắt nạt</option>
-<option>Vi phạm nội quy</option>
-
-</select>
-
-<select id="location">
-
-<option>Sân trường</option>
-<option>Hành lang</option>
-<option>Lớp học</option>
-<option>Nhà vệ sinh</option>
-
-</select>
-
-<textarea id="desc" placeholder="Mô tả"></textarea>
-
-<button onclick="sendReport()">Gửi</button>
-
-</section>
-
-<section id="dashboard" class="hide">
-
-<h2>Dashboard</h2>
-
-<div class="stats">
-
-<div>
-<h3 id="total">0</h3>
-<p>Tổng báo cáo</p>
+            <div class="sidebar-box" style="background: #ffebee; border-top-color: #ef5350;">
+                <h4 style="margin-top:0; color: #d32f2f;">🆘 Hỗ trợ khẩn cấp</h4>
+                <b style="color: #d32f2f;">📞 Tổng đài 111 (Trẻ em)</b><br>
+                <b style="color: #d32f2f;">📞 Hotline đội hỗ trợ Tâm lý trường THCS Gia Tân - 0966730961</b>
+            </div>
+        </aside>
+    </div>
 </div>
 
-<div>
-<h3 id="violence">0</h3>
-<p>Bạo lực</p>
-</div>
+<script>
+    let selectedMood = '';
+    let posts = JSON.parse(localStorage.getItem('mentalHealthDataV2')) || [
+        { id: 1234, content: "Hôm nay mình thấy hơi áp lực chuyện học tập...", mood: 'stress', time: "08:00", likes: 5, urgent: true }
+    ];
 
-<div>
-<h3 id="rule">0</h3>
-<p>Vi phạm</p>
-</div>
+    function showSection(name) {
+        document.getElementById('home-section').classList.toggle('hidden', name !== 'home');
+        document.getElementById('post-section').classList.toggle('hidden', name !== 'post');
+        document.getElementById('admin-section').classList.toggle('hidden', name !== 'admin');
+        
+        document.getElementById('btn-home').classList.toggle('active', name === 'home');
+        document.getElementById('btn-post').classList.toggle('active', name === 'post');
+        document.getElementById('btn-admin').classList.toggle('active', name === 'admin');
 
-</div>
+        if(name === 'admin') renderAdmin();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+function likePost(id) {
+    const post = posts.find(p => p.id === id);
+    if (post) {
+        post.likes += 1;
+        localStorage.setItem('mentalHealthDataV2', JSON.stringify(posts));
+        renderPosts(); // Gọi lại để cập nhật giao diện ngay lập tức
+    }
+}
+    function selectMood(mood, el) {
+        selectedMood = mood;
+        document.querySelectorAll('.mood-item').forEach(item => item.classList.remove('selected'));
+        el.classList.add('selected');
+    }
 
-<canvas id="chart"></canvas>
+    function renderPosts() {
+        const list = document.getElementById('postList');
+        list.innerHTML = '';
+        let happy = 85, sad = 12;
 
-<table>
+        posts.slice().reverse().forEach((post) => {
+        if(post.mood === 'vui') happy++;
+        if(post.mood === 'stress' || post.mood === 'buon' || post.mood === 'gian') sad++;
 
-<tr>
+        const postEl = document.createElement('div');
+        postEl.className = 'post-card';
+        postEl.innerHTML = `
+            <div class="post-header">
+                <span>👤 Bạn ẩn danh #${post.id} (${getMoodEmoji(post.mood)})</span>
+                <span>${post.time}</span>
+            </div>
+            <div class="post-content">${post.content}</div>
+            ${post.img ? `<img src="${post.img}" style="max-width:100%; border-radius:10px; margin-bottom:10px;">` : ''}
+            <div style="font-weight:bold; color:var(--primary); cursor:pointer; display:inline-block;" 
+                 onclick="likePost(${post.id})">
+                 ❤️ ${post.likes} Lượt đồng cảm
+            </div>
+        `;
+        list.appendChild(postEl);
+    });
+        document.getElementById('happyCount').innerText = happy;
+        document.getElementById('sadCount').innerText = sad;
+    }
 
-<th>Học sinh</th>
-<th>Lớp</th>
-<th>Loại</th>
-<th>Địa điểm</th>
+    function renderAdmin() {
+        const list = document.getElementById('adminAlertList');
+        list.innerHTML = '';
+        const urgentPosts = posts.filter(p => p.urgent);
 
-</tr>
+        if(urgentPosts.length === 0) {
+            list.innerHTML = '<p>Hiện không có học sinh nào cần hỗ trợ. 🎉</p>';
+            return;
+        }
 
-<tbody id="list"></tbody>
+        urgentPosts.slice().reverse().forEach(post => {
+            const el = document.createElement('div');
+            el.className = 'post-card';
+            el.style.borderLeft = "5px solid var(--danger)";
+            el.innerHTML = `
+                <div class="post-header"><span class="urgent-tag">CẦN HỖ TRỢ</span> <span>#${post.id}</span></div>
+                <div class="post-content" style="font-size:1em;">${post.content}</div>
+                <button onclick="alert('Đã ghi nhận yêu cầu hỗ trợ cho học sinh #${post.id}')" style="background:#5d4037; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">📞 Phản hồi hỗ trợ</button>
+            `;
+            list.appendChild(el);
+        });
+    }
 
-</table>
+function addPost() {
+    const input = document.getElementById('postInput');
+    const fileInput = document.getElementById('imgUpload');
+    const file = fileInput.files[0];
 
-</section>
+    if (!input.value.trim() || !selectedMood) {
+        alert("Cậu hãy chọn cảm xúc và chia sẻ nhé!");
+        return;
+    }
 
-<script src="script.js"></script>
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            saveNewPost(input.value, e.target.result);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        saveNewPost(input.value, null);
+    }
+}
 
+function saveNewPost(content, imgData) {
+    const newPost = {
+        id: Math.floor(Math.random()*9000)+1000,
+        content: content,
+        img: imgData,
+        mood: selectedMood,
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        likes: 0,
+        urgent: (selectedMood === 'stress' || selectedMood === 'gian')
+    };
+    posts.push(newPost);
+    localStorage.setItem('mentalHealthDataV2', JSON.stringify(posts));
+    document.getElementById('postInput').value = '';
+    document.getElementById('imgUpload').value = '';
+    selectedMood = '';
+    document.querySelectorAll('.mood-item').forEach(item => item.classList.remove('selected'));
+    showSection('home');
+    renderPosts();
+    alert("Thông điệp đã được gửi đi. Cảm ơn cậu đã tin tưởng! ✨");
+}
+
+    function getMoodEmoji(mood) {
+        const map = { 'vui': '😊', 'on': '😐', 'buon': '😢', 'stress': '🤯', 'gian': '😡' };
+        return map[mood] || '😶';
+    }
+
+    function getLuckyStar() {
+        const messages = [
+    "Thành công không phải là cuối cùng, thất bại không phải là tử địa: đó là lòng can đảm để tiếp tục đi tới. — (Winston Churchill)",
+    "Đừng bao giờ từ bỏ những gì bạn thực sự muốn làm. Người có ước mơ lớn mạnh hơn người chỉ có mọi sự thật. — (Albert Einstein)",
+    "Hành trình ngàn dặm bắt đầu từ một bước chân nhỏ bé. — (Lão Tử)",
+    "Hãy cứ hướng về phía ánh mặt trời, bóng tối sẽ lùi lại sau lưng bạn. — (Walt Whitman)",
+    "Cách tốt nhất để dự đoán tương lai là tự mình tạo ra nó. — (Abraham Lincoln)",
+    "Dù cuộc đời có vẻ khó khăn đến đâu, luôn có điều gì đó bạn có thể làm và thành công. — (Stephen Hawking)",
+    "Mọi trẻ em đều là nghệ sĩ. Vấn đề là làm sao giữ được người nghệ sĩ đó khi đã lớn lên. — (Pablo Picasso)",
+    "Yêu bản thân mình là khởi đầu của một cuộc tình lãng mạn suốt đời. — (Oscar Wilde)",
+    "Cuộc đời là 10% những gì xảy ra với bạn và 90% cách bạn phản ứng với nó. — (Charles R. Swindoll)",
+    "Những điều tốt đẹp nhất và đẹp nhất trên thế gian này không thể nhìn thấy hay thậm chí chạm vào - chúng phải được cảm nhận bằng trái tim. — (Helen Keller)",
+    "Đừng để tiếng ồn từ ý kiến của người khác lấn át tiếng nói bên trong bạn. — (Steve Jobs)",
+    "Chỉ có một điều khiến giấc mơ không thể thực hiện được: đó là nỗi sợ thất bại. — (Paulo Coelho)",
+    "Sống là điều hiếm hoi nhất trên thế giới. Hầu hết mọi người chỉ tồn tại, thế thôi. — (Oscar Wilde)",
+    "Bạn không bao giờ quá già để đặt ra một mục tiêu khác hoặc mơ một giấc mơ mới. — (C.S. Lewis)",
+    "Mục đích của cuộc đời chúng ta là được hạnh phúc. — (Dalai Lama)",
+    "Sự thay đổi là quy luật của cuộc sống. Và những ai chỉ nhìn về quá khứ hoặc hiện tại chắc chắn sẽ bỏ lỡ tương lai. — (John F. Kennedy)",
+    "Chúng ta không thể thay đổi hướng gió, nhưng có thể điều chỉnh những cánh buồm. — (Aristotle)",
+    "Vết sẹo mà bạn có là dấu hiệu cho thấy bạn đã mạnh mẽ hơn những gì đã cố gắng làm tổn thương bạn. — (Rumi)",
+    "Hãy tử tế khi có thể. Và thực tế là luôn có thể tử tế. — (Dalai Lama)",
+    "Vinh quang lớn nhất của chúng ta không nằm ở chỗ không bao giờ ngã, mà ở chỗ đứng dậy sau mỗi lần ngã. — (Confucius)"
+];
+        const starMsg = document.getElementById('star-message');
+        starMsg.innerText = messages[Math.floor(Math.random()*messages.length)];
+        starMsg.style.color = "var(--primary)";
+        starMsg.style.fontWeight = "bold";
+    }
+
+    renderPosts();
+</script>
 </body>
 </html>
